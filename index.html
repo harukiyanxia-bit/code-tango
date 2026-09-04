@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>コードたんご - プログラミング学習アプリ</title>
+<link rel="stylesheet" href="css/style.css?v=42">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="header-inner">
+    <div class="app-logo">
+      <span class="app-logo-icon">💡</span>
+      <span class="app-logo-text">コードたんご</span>
+    </div>
+    <div class="status-box">
+      <div class="stat-chip stat-chip--level">
+        <span class="stat-chip-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.6l-5.9 3 1.3-6.6-4.9-4.6 6.6-.8L12 2.5Z"/></svg>
+        </span>
+        <span>Lv. <span id="level-num">1</span></span>
+      </div>
+      <div class="stat-chip stat-chip--score">
+        <span class="stat-chip-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 6"/></svg>
+        </span>
+        <span><span id="correct-num">0</span>問正解</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- ===================== ホーム画面（異世界マップ・duolingo風） ===================== -->
+  <section id="screen-home" class="screen active">
+
+    <!-- マップ（言語ごとのステージパス） -->
+    <div class="home-map-panel" id="home-map-panel">
+      <div class="home-path-banner" id="home-path-banner">
+        <p class="home-path-banner-title" id="home-path-banner-title">🐍 Python</p>
+        <div class="home-lang-switcher" id="home-lang-switcher">
+          <button class="home-lang-switch-btn" data-lang="python">🐍</button>
+          <button class="home-lang-switch-btn" data-lang="html">🌐</button>
+          <button class="home-lang-switch-btn" data-lang="css">🎨</button>
+          <button class="home-lang-switch-btn" data-lang="javascript">⚡</button>
+        </div>
+      </div>
+
+      <p class="stage-subtitle">ステージを選んでバトルへ！</p>
+      <div class="map-path" id="map-path"></div>
+    </div>
+
+    <!-- バトル画面（1ステージ分・duolingo風レッスンカード） -->
+    <div class="stage-panel battle-stage-panel duo-lesson-panel" id="home-battle-panel" hidden>
+
+      <div class="duo-top-bar" id="battle-top-bar">
+        <button class="duo-close-btn" id="battle-back" aria-label="マップに戻る">✕</button>
+        <div class="duo-progress-bar"><div class="duo-progress-fill" id="battle-progress-fill"></div></div>
+        <div class="duo-hp-badge">❤️ <span id="battle-hearts-num">5</span></div>
+      </div>
+
+      <div id="battle-question-area">
+        <span class="duo-badge" id="battle-stage-label">📚 Python ・ 基礎</span>
+        <h2 class="duo-question-title" id="battle-question-label">この単語の説明として正しいものはどれ？</h2>
+
+        <div class="duo-character-row" id="battle-quiz-visual">
+          <div class="duo-character">🧑‍🏫</div>
+          <div class="duo-speech-bubble" id="battle-question">print()</div>
+        </div>
+
+        <hr class="duo-divider" id="battle-quiz-divider">
+
+        <div class="duo-choices" id="battle-choices"></div>
+
+        <div class="duo-order-area" id="battle-order-area" hidden>
+          <div class="order-answer" id="battle-order-answer"></div>
+          <div class="order-bank" id="battle-order-bank"></div>
+          <p class="order-correct-line" id="battle-order-correct-line" hidden></p>
+        </div>
+
+        <div class="quiz-feedback" id="battle-feedback"></div>
+      </div>
+
+      <div class="duo-bottom-bar" id="battle-bottom-bar">
+        <button class="duo-skip-btn" id="battle-dont-know">スキップ</button>
+        <button class="duo-submit-btn" id="battle-next" disabled>送信する</button>
+      </div>
+
+      <div class="session-complete" id="battle-clear" hidden>
+        <p class="session-complete-title" id="battle-clear-title">🎉 ステージクリア！</p>
+        <p class="session-complete-score" id="battle-clear-score">次のステージが解放されました</p>
+
+        <div class="clear-stats-row">
+          <div class="home-stat">
+            <div class="home-stat-value">🔥 <span id="clear-stat-combo">0</span></div>
+            <div class="home-stat-label">最大コンボ</div>
+          </div>
+          <div class="home-stat">
+            <div class="home-stat-value">🎯 <span id="clear-stat-accuracy">0%</span></div>
+            <div class="home-stat-label">正答率</div>
+          </div>
+          <div class="home-stat">
+            <div class="home-stat-value">⭐ <span id="clear-stat-xp">+0</span></div>
+            <div class="home-stat-label">獲得XP</div>
+          </div>
+        </div>
+
+        <div class="level-up-banner" id="level-up-banner" hidden>
+          🎉 レベルアップ！ Lv.<span id="level-up-from"></span> → Lv.<span id="level-up-to"></span>
+        </div>
+
+        <div class="clear-btn-row">
+          <button class="btn-start btn-start-secondary" id="battle-review-btn">🔁 復習する</button>
+          <button class="btn-start" id="battle-continue-btn">マップに戻る</button>
+        </div>
+      </div>
+
+      <div class="session-complete streak-screen" id="battle-streak-screen" hidden>
+        <div class="streak-flame">🔥</div>
+        <p class="streak-count-num" id="streak-count-num">0</p>
+        <p class="streak-count-label">日連続記録</p>
+        <div class="streak-week-row" id="streak-week-row"></div>
+        <p class="streak-encourage-text" id="streak-encourage-text">がんばって目標を達成しているね。その調子！</p>
+        <button class="btn-start" id="streak-continue-btn">つづける</button>
+      </div>
+
+      <div class="session-complete" id="battle-fail" hidden>
+        <p class="session-complete-title">💔 ハートがなくなりました…</p>
+        <p class="session-complete-score">最初からもう一度挑戦しましょう</p>
+        <button class="btn-start" id="battle-fail-retry-btn">もう一度挑戦する</button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ===================== クエスト画面（デイリークエスト） ===================== -->
+  <section id="screen-problems" class="screen">
+    <div class="quest-screen">
+      <div class="quest-header">
+        <p class="quest-header-title">🗡️ デイリークエスト</p>
+        <p class="quest-header-sub">今日の目標を達成してXPを手に入れよう</p>
+        <div class="quest-summary">
+          <div class="quest-summary-bar"><div class="quest-summary-fill" id="quest-summary-fill"></div></div>
+          <span class="quest-summary-text" id="quest-summary-text">0 / 5 達成</span>
+        </div>
+      </div>
+
+      <div class="quest-complete-banner" id="quest-complete-banner" hidden>
+        🎉 今日のクエストコンプリート！
+      </div>
+
+      <div class="quest-list" id="quest-list"></div>
+    </div>
+  </section>
+
+  <!-- ===================== ランキング画面 ===================== -->
+  <section id="screen-ranking" class="screen">
+    <div class="stage-panel">
+      <p class="stage-title">🏆 ランキング</p>
+      <p class="placeholder-text">ランキング機能は準備中です</p>
+    </div>
+  </section>
+
+  <!-- ===================== コード実行画面 ===================== -->
+  <section id="screen-playground" class="screen">
+
+    <div class="pg-lang-tabs" id="pg-lang-tabs">
+      <button class="pg-tab active" data-pglang="web">HTML / CSS / JS</button>
+      <button class="pg-tab" data-pglang="python">Python</button>
+    </div>
+
+    <!-- HTML/CSS/JS プレイグラウンド -->
+    <div class="pg-panel" id="pg-web">
+      <div class="pg-editors-toolbar">
+        <span>エディタ</span>
+        <button class="pg-fullscreen-btn" id="pg-editor-fullscreen-btn-web" type="button">⛶ 全画面</button>
+      </div>
+      <div class="pg-editors-wrap" id="pg-editors-wrap-web">
+        <div class="pg-editors">
+          <div class="pg-editor">
+            <label>HTML</label>
+            <textarea id="code-html" spellcheck="false">&lt;h1&gt;こんにちは！&lt;/h1&gt;
+&lt;p&gt;ここに表示したい内容を書いてね&lt;/p&gt;</textarea>
+          </div>
+          <div class="pg-editor">
+            <label>CSS</label>
+            <textarea id="code-css" spellcheck="false">h1 {
+  color: #4f7cff;
+}</textarea>
+          </div>
+          <div class="pg-editor">
+            <label>JavaScript</label>
+            <textarea id="code-js" spellcheck="false">console.log("実行できました！");</textarea>
+          </div>
+        </div>
+        <button class="pg-fullscreen-exit-btn" id="pg-editor-fullscreen-exit-btn-web" type="button" hidden>✕ 全画面を終了</button>
+      </div>
+      <div class="pg-action-row">
+        <button class="btn-run" id="btn-run-web">▶ 実行する</button>
+        <button class="btn-save" id="btn-save-web">💾 保存する</button>
+        <span class="pg-save-status" id="pg-save-status-web" hidden>✅ 保存しました</span>
+      </div>
+      <div class="pg-output">
+        <div class="pg-output-header pg-output-header-row">
+          <span>プレビュー</span>
+          <button class="pg-fullscreen-btn" id="pg-fullscreen-btn" type="button">⛶ 全画面</button>
+        </div>
+        <div class="pg-preview-wrap" id="pg-preview-wrap">
+          <iframe id="pg-iframe" class="pg-iframe" sandbox="allow-scripts"></iframe>
+          <button class="pg-fullscreen-exit-btn" id="pg-fullscreen-exit-btn" type="button" hidden>✕ 全画面を終了</button>
+        </div>
+        <div class="pg-output-header">コンソール出力</div>
+        <pre class="pg-console" id="pg-console"></pre>
+      </div>
+    </div>
+
+    <!-- Python プレイグラウンド -->
+    <div class="pg-panel" id="pg-python" style="display:none;">
+      <div class="pg-editors-toolbar">
+        <span>エディタ</span>
+        <button class="pg-fullscreen-btn" id="pg-editor-fullscreen-btn-python" type="button">⛶ 全画面</button>
+      </div>
+      <div class="pg-editors-wrap" id="pg-editors-wrap-python">
+        <div class="pg-editors">
+          <div class="pg-editor pg-editor-full">
+            <label>Python</label>
+            <textarea id="code-python" spellcheck="false">print("こんにちは！")
+for i in range(3):
+    print(i)</textarea>
+          </div>
+        </div>
+        <button class="pg-fullscreen-exit-btn" id="pg-editor-fullscreen-exit-btn-python" type="button" hidden>✕ 全画面を終了</button>
+      </div>
+      <div class="pg-action-row">
+        <button class="btn-run" id="btn-run-python">▶ 実行する</button>
+        <button class="btn-save" id="btn-save-python">💾 保存する</button>
+        <span class="pg-save-status" id="pg-save-status-python" hidden>✅ 保存しました</span>
+      </div>
+      <p class="pg-note" id="pg-python-note">初回実行時にPython実行エンジンを読み込みます（インターネット接続が必要です）。</p>
+      <div class="pg-output">
+        <div class="pg-output-header">実行結果</div>
+        <pre class="pg-console" id="pg-python-console"></pre>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ===================== 設定画面（プロフィール・進捗） ===================== -->
+  <section id="screen-settings" class="screen">
+
+    <div class="home-profile-card">
+      <div class="home-avatar">🧑‍💻</div>
+      <div class="home-profile-main">
+        <div class="home-username">ゲスト</div>
+        <div class="course-lang-level-row">
+          <div class="home-level">Lv. <span id="home-level-num">1</span></div>
+          <div class="course-lang-xp-bar"><div class="course-lang-xp-fill" id="home-xp-fill"></div></div>
+          <span class="course-lang-xp-text" id="home-xp-text">0/10xp</span>
+        </div>
+      </div>
+      <div class="home-divider"></div>
+      <div class="home-stat">
+        <div class="home-stat-value">📖 <span id="home-correct-num">0</span></div>
+        <div class="home-stat-label">総正解数</div>
+      </div>
+      <div class="home-divider"></div>
+      <div class="home-stat">
+        <div class="home-stat-value">🔥 <span id="home-streak-num">0</span></div>
+        <div class="home-stat-label">連続日数</div>
+      </div>
+      <div class="home-divider"></div>
+      <div class="home-stat">
+        <div class="home-stat-value">🏆 <span id="home-trophy-num">0</span></div>
+        <div class="home-stat-label">トロフィー</div>
+      </div>
+    </div>
+
+    <div class="xp-chart-card">
+      <p class="xp-chart-title">📈 直近7日間の獲得XP</p>
+      <div class="xp-chart-svg-wrap" id="xp-chart-wrap"></div>
+    </div>
+
+    <div class="home-section-label">📖 前回の続き</div>
+
+    <div class="home-continue-card" id="home-continue-card"></div>
+
+  </section>
+</main>
+
+<nav class="bottom-nav">
+  <button class="nav-btn active" data-screen="home">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9a1 1 0 0 0 1 1h4v-6h2v6h4a1 1 0 0 0 1-1v-9"/></svg>
+    </span>
+    <span class="nav-label">ホーム</span>
+  </button>
+  <button class="nav-btn" data-screen="problems">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v18"/><path d="M5 4h11l-2.5 3.5L16 11H5"/></svg>
+    </span>
+    <span class="nav-label">クエスト</span>
+  </button>
+  <button class="nav-btn" data-screen="ranking">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v4a5 5 0 0 1-10 0V4Z"/><path d="M7 5H4a3 3 0 0 0 3 5"/><path d="M17 5h3a3 3 0 0 1-3 5"/><path d="M12 13v3"/><path d="M9 20h6"/><path d="M10 17h4l.5 3h-5l.5-3Z"/></svg>
+    </span>
+    <span class="nav-label">ランキング</span>
+  </button>
+  <button class="nav-btn" data-screen="playground">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18-6-6 6-6"/><path d="m15 6 6 6-6 6"/></svg>
+    </span>
+    <span class="nav-label">コードを書く</span>
+  </button>
+  <button class="nav-btn" data-screen="settings">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 13a7.97 7.97 0 0 0 0-2l2-1.6-2-3.4-2.4 1a8.1 8.1 0 0 0-1.7-1L15 3h-4l-.3 2.6a8.1 8.1 0 0 0-1.7 1l-2.4-1-2 3.4L6.6 11a8 8 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a8.1 8.1 0 0 0 1.7 1L11 21h4l.3-2.6a8.1 8.1 0 0 0 1.7-1l2.4 1 2-3.4-2-1.6Z"/></svg>
+    </span>
+    <span class="nav-label">設定</span>
+  </button>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js" defer></script>
+<script src="js/data.js?v=42"></script>
+<script src="js/order-data.js?v=42"></script>
+<script src="js/progress.js?v=42"></script>
+<script src="js/quiz.js?v=42"></script>
+<script src="js/mapdata.js?v=42"></script>
+<script src="js/mapstate.js?v=42"></script>
+<script src="js/dailyquest.js?v=42"></script>
+<script src="js/battle.js?v=42"></script>
+<script src="js/quest.js?v=42"></script>
+<script src="js/problem.js?v=42"></script>
+<script src="js/home.js?v=42"></script>
+<script src="js/playground.js?v=42"></script>
+<script src="js/main.js?v=42"></script>
+</body>
+</html>
