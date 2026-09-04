@@ -1,5 +1,5 @@
 /* =========================================================
-   コードたんご デザインシステム
+   codetrek デザインシステム
    「シンプル・鮮やか・ポップ・モダン・親しみやすい・ゲーム感」
    ========================================================= */
 :root {
@@ -1693,3 +1693,110 @@ body.pg-fullscreen-active { overflow: hidden; }
   .quest-card-reward { width: calc(100% - 58px); text-align: left; margin-left: 58px; }
   .quest-claim-btn { padding: 8px 14px; font-size: 0.76rem; }
 }
+
+/* ---------- アカウント（サインイン・新規登録）画面 ---------- */
+.auth-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: var(--page-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.auth-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 36px 28px;
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+}
+
+.auth-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 22px;
+}
+
+.auth-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 20px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.auth-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-sub);
+  margin-top: 12px;
+  margin-bottom: 6px;
+}
+
+.auth-input {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  font-size: 0.95rem;
+  background: var(--bg-soft);
+  color: var(--text);
+}
+
+.auth-input:focus { outline: none; border-color: var(--primary); }
+
+.auth-error {
+  color: var(--danger);
+  font-size: 0.8rem;
+  font-weight: 700;
+  min-height: 18px;
+  margin: 10px 0 0;
+}
+
+.auth-submit-btn {
+  width: 100%;
+  margin-top: 14px;
+}
+
+.auth-toggle-btn {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 18px;
+  text-decoration: underline;
+}
+
+.auth-signout-btn {
+  display: block;
+  margin: 24px auto 0;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 10px 22px;
+  color: var(--text-sub);
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.auth-signout-btn:hover { background: var(--bg-soft); }

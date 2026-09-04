@@ -3,16 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>コードたんご - プログラミング学習アプリ</title>
-<link rel="stylesheet" href="css/style.css?v=42">
+<title>codetrek - プログラミング学習アプリ</title>
+<link rel="stylesheet" href="css/style.css?v=46">
 </head>
 <body>
 
-<header class="app-header">
+<div id="auth-screen" class="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <span class="app-logo-icon">💡</span>
+      <span class="app-logo-text">codetrek</span>
+    </div>
+    <p class="auth-title" id="auth-title">新規アカウント作成</p>
+    <form id="auth-form" class="auth-form" autocomplete="on">
+      <label class="auth-label" for="auth-username">ユーザー名</label>
+      <input type="text" id="auth-username" class="auth-input" autocomplete="username" placeholder="半角英数字・3〜20文字" required>
+      <label class="auth-label" for="auth-password">パスワード</label>
+      <input type="password" id="auth-password" class="auth-input" autocomplete="current-password" placeholder="6文字以上" required>
+      <p class="auth-error" id="auth-error"></p>
+      <button type="submit" class="btn-start auth-submit-btn" id="auth-submit-btn">アカウントを作成</button>
+    </form>
+    <button type="button" class="auth-toggle-btn" id="auth-toggle-mode-btn">すでにアカウントをお持ちの方はこちら</button>
+  </div>
+</div>
+
+<header class="app-header" id="app-header" hidden>
   <div class="header-inner">
     <div class="app-logo">
       <span class="app-logo-icon">💡</span>
-      <span class="app-logo-text">コードたんご</span>
+      <span class="app-logo-text">codetrek</span>
     </div>
     <div class="status-box">
       <div class="stat-chip stat-chip--level">
@@ -31,7 +50,7 @@
   </div>
 </header>
 
-<main>
+<main id="app-main" hidden>
   <!-- ===================== ホーム画面（異世界マップ・duolingo風） ===================== -->
   <section id="screen-home" class="screen active">
 
@@ -285,10 +304,12 @@ for i in range(3):
 
     <div class="home-continue-card" id="home-continue-card"></div>
 
+    <button class="auth-signout-btn" id="auth-signout-btn">ログアウト</button>
+
   </section>
 </main>
 
-<nav class="bottom-nav">
+<nav class="bottom-nav" id="app-nav" hidden>
   <button class="nav-btn active" data-screen="home">
     <span class="nav-icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9a1 1 0 0 0 1 1h4v-6h2v6h4a1 1 0 0 0 1-1v-9"/></svg>
@@ -323,18 +344,21 @@ for i in range(3):
 
 <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js" defer></script>
-<script src="js/data.js?v=42"></script>
-<script src="js/order-data.js?v=42"></script>
-<script src="js/progress.js?v=42"></script>
-<script src="js/quiz.js?v=42"></script>
-<script src="js/mapdata.js?v=42"></script>
-<script src="js/mapstate.js?v=42"></script>
-<script src="js/dailyquest.js?v=42"></script>
-<script src="js/battle.js?v=42"></script>
-<script src="js/quest.js?v=42"></script>
-<script src="js/problem.js?v=42"></script>
-<script src="js/home.js?v=42"></script>
-<script src="js/playground.js?v=42"></script>
-<script src="js/main.js?v=42"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="js/supabase-config.js?v=46"></script>
+<script src="js/auth.js?v=46"></script>
+<script src="js/data.js?v=46"></script>
+<script src="js/order-data.js?v=46"></script>
+<script src="js/progress.js?v=46"></script>
+<script src="js/quiz.js?v=46"></script>
+<script src="js/mapdata.js?v=46"></script>
+<script src="js/mapstate.js?v=46"></script>
+<script src="js/dailyquest.js?v=46"></script>
+<script src="js/battle.js?v=46"></script>
+<script src="js/quest.js?v=46"></script>
+<script src="js/problem.js?v=46"></script>
+<script src="js/home.js?v=46"></script>
+<script src="js/playground.js?v=46"></script>
+<script src="js/main.js?v=46"></script>
 </body>
 </html>

@@ -1,6 +1,7 @@
 // 画面切り替え・タブ操作のとりまとめ
+// ログイン成功後にauth.jsから呼ばれる（アカウント機能導入により、DOMContentLoaded直後の自動実行はしない）
 
-document.addEventListener("DOMContentLoaded", () => {
+function initApp() {
   // 下部ナビ（ホーム / 問題 / ランキング / コードを書く / 設定）
   document.querySelectorAll(".nav-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -50,4 +51,4 @@ document.addEventListener("DOMContentLoaded", () => {
   BattleEngine.init();
   HomeEngine.render();
   Playground.init();
-});
+}
