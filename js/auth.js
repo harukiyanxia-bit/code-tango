@@ -19,6 +19,8 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_
 
 const Auth = {
   currentUserId: null,
+  currentEmail: null,
+  currentUsername: null,
   _hydrating: false,
   _syncTimer: null,
 
@@ -59,6 +61,8 @@ const Auth = {
 
   async _onLoginSuccess(user) {
     this.currentUserId = user.id;
+    this.currentEmail = user.email;
+    this.currentUsername = (user.email || "").split("@")[0];
     await this._hydrateFromCloud();
     await this._pushToCloud(); // 新規登録時に既存のローカル進捗があればクラウドへ反映する
 
@@ -141,6 +145,29 @@ const Auth = {
     }
     Object.keys(SYNCED_KEYS).forEach((k) => localStorage.removeItem(k));
     location.reload();
+  },
+
+  // パスワードを再確認したうえでアカウント本体とクラウド上のデータを完全に削除する
+  // 戻り値：{ ok: true } または { ok: false, message }
+  async deleteAccount(password) {
+    if (!this.currentEmail) return { ok: false, message: "ログイン状態が確認できません" };
+
+    const { error: reauthError } = await supabaseClient.auth.signInWithPassword({
+      email: this.currentEmail,
+      password,
+    });
+    if (reauthError) return { ok: false, message: "パスワードが正しくありません" };
+
+    const { error: rpcError } = await supabaseClient.rpc("delete_own_account");
+    if (rpcError) return { ok: false, message: "削除に失敗しました：" + rpcError.message };
+
+    try {
+      await supabaseClient.auth.signOut();
+    } catch (e) {
+      /* アカウント自体は削除済みのため、サインアウトの失敗は無視して続行する */
+    }
+    Object.keys(SYNCED_KEYS).forEach((k) => localStorage.removeItem(k));
+    return { ok: true };
   },
 
   _wireSignOut() {

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>codetrek - プログラミング学習アプリ</title>
-<link rel="stylesheet" href="css/style.css?v=46">
+<link rel="stylesheet" href="css/style.css?v=48">
 </head>
 <body>
 
@@ -175,9 +175,13 @@
 
   <!-- ===================== ランキング画面 ===================== -->
   <section id="screen-ranking" class="screen">
-    <div class="stage-panel">
-      <p class="stage-title">🏆 ランキング</p>
-      <p class="placeholder-text">ランキング機能は準備中です</p>
+    <div class="ranking-screen">
+      <p class="ranking-header-title">🏆 ランキング</p>
+      <div class="ranking-tabs" id="ranking-tabs">
+        <button class="ranking-tab active" data-ranktab="trending">🔥 急上昇</button>
+        <button class="ranking-tab" data-ranktab="total">🏆 合計</button>
+      </div>
+      <div class="ranking-list" id="ranking-list"></div>
     </div>
   </section>
 
@@ -268,43 +272,152 @@ for i in range(3):
   <!-- ===================== 設定画面（プロフィール・進捗） ===================== -->
   <section id="screen-settings" class="screen">
 
-    <div class="home-profile-card">
-      <div class="home-avatar">🧑‍💻</div>
-      <div class="home-profile-main">
-        <div class="home-username">ゲスト</div>
-        <div class="course-lang-level-row">
-          <div class="home-level">Lv. <span id="home-level-num">1</span></div>
-          <div class="course-lang-xp-bar"><div class="course-lang-xp-fill" id="home-xp-fill"></div></div>
-          <span class="course-lang-xp-text" id="home-xp-text">0/10xp</span>
+    <div id="settings-overview-panel">
+      <div class="home-profile-card">
+        <div class="home-avatar">🧑‍💻</div>
+        <div class="home-profile-main">
+          <div class="home-username" id="home-username-display">ゲスト</div>
+          <div class="course-lang-level-row">
+            <div class="home-level">Lv. <span id="home-level-num">1</span></div>
+            <div class="course-lang-xp-bar"><div class="course-lang-xp-fill" id="home-xp-fill"></div></div>
+            <span class="course-lang-xp-text" id="home-xp-text">0/10xp</span>
+          </div>
+        </div>
+        <div class="home-divider"></div>
+        <div class="home-stat">
+          <div class="home-stat-value">📖 <span id="home-correct-num">0</span></div>
+          <div class="home-stat-label">総正解数</div>
+        </div>
+        <div class="home-divider"></div>
+        <div class="home-stat">
+          <div class="home-stat-value">🔥 <span id="home-streak-num">0</span></div>
+          <div class="home-stat-label">連続日数</div>
+        </div>
+        <div class="home-divider"></div>
+        <div class="home-stat">
+          <div class="home-stat-value">🏆 <span id="home-trophy-num">0</span></div>
+          <div class="home-stat-label">トロフィー</div>
         </div>
       </div>
-      <div class="home-divider"></div>
-      <div class="home-stat">
-        <div class="home-stat-value">📖 <span id="home-correct-num">0</span></div>
-        <div class="home-stat-label">総正解数</div>
+
+      <button class="settings-open-btn" id="settings-open-btn">⚙️ 設定を開く</button>
+
+      <div class="xp-chart-card">
+        <p class="xp-chart-title">📈 直近7日間の獲得XP</p>
+        <div class="xp-chart-svg-wrap" id="xp-chart-wrap"></div>
       </div>
-      <div class="home-divider"></div>
-      <div class="home-stat">
-        <div class="home-stat-value">🔥 <span id="home-streak-num">0</span></div>
-        <div class="home-stat-label">連続日数</div>
+
+      <div class="home-section-label">📖 前回の続き</div>
+
+      <div class="home-continue-card" id="home-continue-card"></div>
+
+      <button class="auth-signout-btn" id="auth-signout-btn">ログアウト</button>
+    </div>
+
+    <div id="settings-app-panel" hidden>
+      <div class="settings-panel-header">
+        <button class="settings-back-btn" id="settings-back-btn" aria-label="戻る">←</button>
+        <p class="settings-panel-title">⚙️ 設定</p>
       </div>
-      <div class="home-divider"></div>
-      <div class="home-stat">
-        <div class="home-stat-value">🏆 <span id="home-trophy-num">0</span></div>
-        <div class="home-stat-label">トロフィー</div>
+
+      <div class="settings-section">
+        <p class="settings-section-title">🎨 表示</p>
+        <div class="settings-row">
+          <span class="settings-row-label">🌙 ダークモード</span>
+          <label class="settings-toggle">
+            <input type="checkbox" id="setting-dark-mode">
+            <span class="settings-toggle-slider"></span>
+          </label>
+        </div>
+        <div class="settings-row">
+          <span class="settings-row-label">✨ アニメーション</span>
+          <label class="settings-toggle">
+            <input type="checkbox" id="setting-animations" checked>
+            <span class="settings-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <p class="settings-section-title">🔊 サウンド</p>
+        <div class="settings-row">
+          <span class="settings-row-label">🔊 効果音</span>
+          <label class="settings-toggle">
+            <input type="checkbox" id="setting-sound" checked>
+            <span class="settings-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <p class="settings-section-title">📚 学習</p>
+        <div class="settings-row">
+          <span class="settings-row-label">💡 ヒント</span>
+          <label class="settings-toggle">
+            <input type="checkbox" id="setting-hints" checked>
+            <span class="settings-toggle-slider"></span>
+          </label>
+        </div>
+        <div class="settings-row">
+          <span class="settings-row-label">📖 解説</span>
+          <label class="settings-toggle">
+            <input type="checkbox" id="setting-explanations" checked>
+            <span class="settings-toggle-slider"></span>
+          </label>
+        </div>
+        <div class="settings-row">
+          <span class="settings-row-label">🔄 間違いを復習</span>
+          <label class="settings-toggle">
+            <input type="checkbox" id="setting-review-mistakes" checked>
+            <span class="settings-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <p class="settings-section-title">💾 データ</p>
+        <button class="settings-danger-row" id="settings-delete-account-btn">🗑️ アカウントを削除</button>
+      </div>
+
+      <div class="settings-section">
+        <p class="settings-section-title">ℹ️ アプリについて</p>
+        <button class="settings-link-row" id="settings-feedback-btn">
+          <span>💬 フィードバック</span><span class="settings-link-arrow">›</span>
+        </button>
+        <div class="settings-row">
+          <span class="settings-row-label">📱 バージョン</span>
+          <span class="settings-row-value">1.0.0</span>
+        </div>
+        <button class="settings-link-row" id="settings-about-btn">
+          <span>📄 このアプリについて</span><span class="settings-link-arrow">›</span>
+        </button>
       </div>
     </div>
 
-    <div class="xp-chart-card">
-      <p class="xp-chart-title">📈 直近7日間の獲得XP</p>
-      <div class="xp-chart-svg-wrap" id="xp-chart-wrap"></div>
+    <!-- アカウント削除の確認（パスワード入力） -->
+    <div id="delete-account-modal" class="settings-modal-overlay" hidden>
+      <div class="settings-modal-card">
+        <p class="settings-modal-title">🗑️ アカウントを削除しますか？</p>
+        <p class="settings-modal-desc">この操作は取り消せません。全ての学習データが削除されます。確認のためパスワードを入力してください。</p>
+        <input type="password" id="delete-account-password" class="auth-input" placeholder="パスワード">
+        <p class="auth-error" id="delete-account-error"></p>
+        <div class="settings-modal-btn-row">
+          <button type="button" class="settings-modal-cancel-btn" id="delete-account-cancel-btn">キャンセル</button>
+          <button type="button" class="settings-modal-confirm-btn" id="delete-account-confirm-btn">削除する</button>
+        </div>
+      </div>
     </div>
 
-    <div class="home-section-label">📖 前回の続き</div>
-
-    <div class="home-continue-card" id="home-continue-card"></div>
-
-    <button class="auth-signout-btn" id="auth-signout-btn">ログアウト</button>
+    <!-- このアプリについて -->
+    <div id="about-modal" class="settings-modal-overlay" hidden>
+      <div class="settings-modal-card">
+        <p class="settings-modal-title">📄 このアプリについて</p>
+        <p class="settings-modal-desc">codetrekは、Python・HTML・CSS・JavaScriptを楽しく学べる無料のプログラミング学習ゲームです。単語クイズや並べ替え問題でステージを進めながら、実際にコードを書いて動かすこともできます。</p>
+        <div class="settings-modal-btn-row">
+          <button type="button" class="settings-modal-confirm-btn" id="about-close-btn">閉じる</button>
+        </div>
+      </div>
+    </div>
 
   </section>
 </main>
@@ -345,20 +458,22 @@ for i in range(3):
 <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<script src="js/supabase-config.js?v=46"></script>
-<script src="js/auth.js?v=46"></script>
-<script src="js/data.js?v=46"></script>
-<script src="js/order-data.js?v=46"></script>
-<script src="js/progress.js?v=46"></script>
-<script src="js/quiz.js?v=46"></script>
-<script src="js/mapdata.js?v=46"></script>
-<script src="js/mapstate.js?v=46"></script>
-<script src="js/dailyquest.js?v=46"></script>
-<script src="js/battle.js?v=46"></script>
-<script src="js/quest.js?v=46"></script>
-<script src="js/problem.js?v=46"></script>
-<script src="js/home.js?v=46"></script>
-<script src="js/playground.js?v=46"></script>
-<script src="js/main.js?v=46"></script>
+<script src="js/supabase-config.js?v=48"></script>
+<script src="js/auth.js?v=48"></script>
+<script src="js/app-settings.js?v=48"></script>
+<script src="js/data.js?v=48"></script>
+<script src="js/order-data.js?v=48"></script>
+<script src="js/progress.js?v=48"></script>
+<script src="js/quiz.js?v=48"></script>
+<script src="js/mapdata.js?v=48"></script>
+<script src="js/mapstate.js?v=48"></script>
+<script src="js/dailyquest.js?v=48"></script>
+<script src="js/battle.js?v=48"></script>
+<script src="js/quest.js?v=48"></script>
+<script src="js/ranking.js?v=48"></script>
+<script src="js/problem.js?v=48"></script>
+<script src="js/home.js?v=48"></script>
+<script src="js/playground.js?v=48"></script>
+<script src="js/main.js?v=48"></script>
 </body>
 </html>

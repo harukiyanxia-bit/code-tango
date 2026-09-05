@@ -15,6 +15,7 @@ function initApp() {
       if (target === "settings") HomeEngine.render();
       if (target === "home") ProblemFlow.renderStage();
       if (target === "problems") QuestEngine.render();
+      if (target === "ranking") RankingEngine.render();
     });
   });
 

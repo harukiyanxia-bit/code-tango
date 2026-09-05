@@ -254,6 +254,7 @@ const BattleEngine = {
       this.state.xpEarnedThisRound += earnedXp;
       this.state.combo++;
       if (this.state.combo > this.state.comboMax) this.state.comboMax = this.state.combo;
+      AppSettings.playSound("correct");
     } else {
       answerEl.classList.add("order-answer-wrong");
       feedbackEl.textContent = "残念、不正解…";
@@ -262,6 +263,7 @@ const BattleEngine = {
       this.loseHeart();
       this.state.combo = 0;
       this.showOrderCorrectLine();
+      AppSettings.playSound("wrong");
     }
 
     DailyQuest.recordAnswer(isCorrect, Progress.streak);
@@ -303,6 +305,7 @@ const BattleEngine = {
       this.state.xpEarnedThisRound += earnedXp;
       this.state.combo++;
       if (this.state.combo > this.state.comboMax) this.state.comboMax = this.state.combo;
+      AppSettings.playSound("correct");
     } else {
       buttons[index].classList.add("wrong");
       feedbackEl.textContent = "残念、不正解…";
@@ -310,6 +313,7 @@ const BattleEngine = {
       Progress.registerWrong();
       this.loseHeart();
       this.state.combo = 0;
+      AppSettings.playSound("wrong");
     }
 
     DailyQuest.recordAnswer(isCorrect, Progress.streak);
@@ -338,6 +342,7 @@ const BattleEngine = {
     Progress.registerWrong();
     this.loseHeart();
     this.state.combo = 0;
+    AppSettings.playSound("wrong");
     DailyQuest.recordAnswer(false, Progress.streak);
     this.finishQuestion();
   },

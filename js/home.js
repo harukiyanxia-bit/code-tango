@@ -4,6 +4,8 @@ const HOME_MODE_LABEL = { quiz: "単語クイズ", order: "並べ替え問題", 
 
 const HomeEngine = {
   render() {
+    document.getElementById("home-username-display").textContent =
+      (typeof Auth !== "undefined" && Auth.currentUsername) || "ゲスト";
     document.getElementById("home-level-num").textContent = Progress.level;
     const xpNeeded = Progress.xpForNextLevel();
     document.getElementById("home-xp-fill").style.width = (Progress.xp / xpNeeded) * 100 + "%";
